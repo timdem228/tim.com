@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remote | Портфолио</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #ffffff;
+            --secondary-color: #a0a0a0;
+            --accent-color: #6b7280;
+            --bg-color: #0a0a0a;
+            --card-bg: rgba(30, 30, 30, 0.7);
+            --glass-bg: rgba(20, 20, 20, 0.7);
+            --border-color: #333333;
+            --ios-bg: rgba(28, 28, 30, 0.8);
+            --ios-border: rgba(84, 84, 88, 0.65);
+            --windows-bg: #202020;
+            --windows-header: #2d2d2d;
+            --windows-sidebar: #1e1e1e;
+            --windows-hover: #3c3c3c;
+            --windows-accent: #0078d7;
+            --success-color: #27ca3f;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 100px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .avatar-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            position: relative;
+            height: 120px;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--primary-color);
+            object-fit: cover;
+            position: absolute;
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+
+        .avatar-1 {
+            z-index: 2;
+            transform: translateX(-20px);
+        }
+
+        .avatar-2 {
+            z-index: 1;
+            transform: translateX(20px);
+        }
+
+        .avatar-swapped .avatar-1 {
+            transform: translateX(20px);
+            z-index: 1;
+        }
+
+        .avatar-swapped .avatar-2 {
+            transform: translateX(-20px);
+            z-index: 2;
+        }
+
+        .name-toggle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            position: relative;
+            height: 60px;
+        }
+
+        .side-text {
+            color: var(--secondary-color);
+            font-size: 18px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            padding: 0 15px;
+            position: absolute;
+            opacity: 1;
+            transition: all 0.5s ease;
+        }
+
+        .left-text {
+            left: 0;
+        }
+
+        .right-text {
+            right: 0;
+        }
+
+        .center-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: 5px 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .center-text:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Text animation */
+        .text-animation {
+            position: relative;
+            display: inline-block;
+            height: 40px;
+            width: 120px;
+        }
+
+        .text-animation .text-remote,
+        .text-animation .text-tim {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .text-animation .text-remote {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .text-animation .text-tim {
+            opacity: 0;
+            transform: translateY(20px) scale(0.9);
+        }
+
+        .text-animation.remote-active .text-remote {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .text-animation.remote-active .text-tim {
+            opacity: 0;
+            transform: translateY(20px) scale(0.9);
+        }
+
+        .text-animation.tim-active .text-remote {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.9);
+        }
+
+        .text-animation.tim-active .text-tim {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Side text animations */
+        .side-text {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .side-text.remote-text {
+            opacity: 0.5;
+            transform: scale(0.9);
+        }
+
+        .side-text.tim-text {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .text-swapped .side-text.remote-text {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .text-swapped .side-text.tim-text {
+            opacity: 0.5;
+            transform: scale(0.9);
+        }
+
+        /* Typewriter animation */
+        .typewriter-container {
+            position: relative;
+            height: 30px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .typewriter {
+            font-family: 'Courier New', monospace;
+            color: var(--secondary-color);
+            font-size: 16px;
+            position: relative;
+        }
+
+        .typewriter::after {
+            content: '|';
+            animation: blink 1s infinite;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Additional text animations */
+        .additional-text {
+            position: relative;
+            height: 30px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .additional-text .text-content {
+            position: absolute;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .text-above,
+        .text-below {
+            color: var(--secondary-color);
+            font-size: 16px;
+        }
+
+        .additional-text .text-remote {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        .additional-text .text-tim {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .text-swapped .additional-text .text-remote {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .text-swapped .additional-text .text-tim {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        /* Simplified Windows Explorer */
+        .windows-explorer {
+            background-color: var(--windows-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .explorer-header {
+            background-color: var(--windows-header);
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .explorer-buttons {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+        }
+
+        .explorer-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .red { background-color: #ff5f56; }
+        .yellow { background-color: #ffbd2e; }
+        .green { background-color: #27ca3f; }
+
+        .address-bar {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin: 0 10px;
+            font-size: 14px;
+        }
+
+        .address-path {
+            color: var(--secondary-color);
+        }
+
+        .explorer-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: var(--windows-sidebar);
+            border-right: 1px solid var(--border-color);
+            padding: 15px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+
+        .sidebar-title {
+            color: var(--secondary-color);
+            font-size: 11px;
+            font-weight: bold;
+            padding: 8px 15px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .sidebar-item:hover {
+            background-color: var(--windows-hover);
+        }
+
+        .sidebar-item.active {
+            background-color: var(--windows-accent);
+        }
+
+        .sidebar-icon {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .files-area {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 20px;
+            align-content: flex-start;
+        }
+
+        .file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 15px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-align: center;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .file-item:hover {
+            background-color: var(--windows-hover);
+            transform: translateY(-2px);
+        }
+
+        .file-item.selected {
+            background-color: rgba(0, 120, 215, 0.2);
+            border-color: var(--windows-accent);
+        }
+
+        .file-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+            color: var(--accent-color);
+        }
+
+        .file-name {
+            color: var(--primary-color);
+            font-size: 13px;
+            word-break: break-word;
+            max-width: 120px;
+            line-height: 1.3;
+        }
+
+        .status-bar {
+            background-color: var(--windows-header);
+            padding: 8px 15px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--secondary-color);
+        }
+
+        /* iOS Style Bottom Navigation */
+        .ios-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--ios-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--ios-border);
+            border-radius: 25px;
+            padding: 10px 15px;
+            display: flex;
+            gap: 25px;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            max-width: 90%;
+            overflow: hidden;
+        }
+
+        .ios-nav.expanded {
+            border-radius: 20px;
+            padding: 15px 20px;
+            transform: translateX(-50%) translateY(-10px);
+        }
+
+        .ios-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+        }
+
+        .ios-nav-item.active {
+            color: var(--primary-color);
+        }
+
+        .ios-nav-icon {
+            font-size: 22px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        .ios-nav-item.active .ios-nav-icon {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Link icon badge */
+        .link-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 12px;
+            color: var(--windows-accent);
+            opacity: 0.8;
+        }
+
+        /* Remove blue outline on click for all interactive elements */
+        .ios-nav-item:focus,
+        .ios-nav-item:active,
+        .link-item:focus, 
+        .link-item:active,
+        .file-item:focus,
+        .file-item:active,
+        .sidebar-item:focus,
+        .sidebar-item:active,
+        .center-text:focus,
+        .center-text:active {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Remove tap highlight on mobile */
+        .ios-nav-item,
+        .link-item,
+        .file-item,
+        .sidebar-item,
+        .center-text {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Links Section */
+        .links {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .links h2 {
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            font-size: 28px;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .link-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 25px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            border: 1px solid transparent;
+        }
+
+        .link-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+        }
+
+        .link-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+        }
+
+        .link-name {
+            color: var(--primary-color);
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .link-desc {
+            color: var(--secondary-color);
+            font-size: 14px;
+        }
+
+        /* Projects Section */
+        .projects {
+            margin: 60px 0;
+        }
+
+        .projects h2 {
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Modal Windows */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Notepad Modal */
+        .notepad {
+            width: 80%;
+            max-width: 600px;
+            background: linear-gradient(to bottom, #f5f5f5 0%, #e8e8e8 100%);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #c0c0c0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .notepad-header {
+            background: linear-gradient(to bottom, #4a7bbf 0%, #3a6bb0 100%);
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2a5b9f;
+        }
+
+        .notepad-title {
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notepad-title i {
+            font-size: 16px;
+        }
+
+        .notepad-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .notepad-button {
+            width: 25px;
+            height: 25px;
+            border: 1px solid #2a5b9f;
+            background: linear-gradient(to bottom, #6b9de0 0%, #4a7bbf 100%);
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .notepad-button:hover {
+            background: linear-gradient(to bottom, #7badf0 0%, #5b8bcf 100%);
+        }
+
+        .notepad-button.close {
+            background: linear-gradient(to bottom, #ff6b6b 0%, #ff5252 100%);
+            border-color: #e04a4a;
+        }
+
+        .notepad-button.close:hover {
+            background: linear-gradient(to bottom, #ff7b7b 0%, #ff6262 100%);
+        }
+
+        .notepad-menu {
+            background: #f0f0f0;
+            padding: 5px 15px;
+            border-bottom: 1px solid #d0d0d0;
+            display: flex;
+            gap: 20px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .menu-item {
+            cursor: pointer;
+            padding: 2px 8px;
+            border-radius: 3px;
+        }
+
+        .menu-item:hover {
+            background-color: #e0e0e0;
+        }
+
+        .notepad-content {
+            padding: 20px;
+            color: #000;
+            height: 400px;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            background: white;
+            border: 1px solid #ccc;
+            margin: 10px;
+            border-radius: 3px;
+            white-space: pre-wrap;
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .notepad-status {
+            background: #f0f0f0;
+            padding: 3px 15px;
+            border-top: 1px solid #d0d0d0;
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Link Dialog Modal */
+        .link-dialog {
+            width: 80%;
+            max-width: 500px;
+            background: var(--windows-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .dialog-header {
+            background: var(--windows-header);
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dialog-title {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dialog-icon {
+            color: var(--windows-accent);
+        }
+
+        .dialog-close {
+            background: none;
+            border: none;
+            color: var(--secondary-color);
+            font-size: 20px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .dialog-close:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .dialog-body {
+            padding: 25px 30px;
+            color: var(--primary-color);
+        }
+
+        .dialog-message {
+            margin-bottom: 20px;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .dialog-url {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+            word-break: break-all;
+            color: var(--secondary-color);
+        }
+
+        .verification-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--success-color);
+            font-size: 14px;
+            margin-bottom: 25px;
+            padding: 10px 15px;
+            background: rgba(39, 202, 63, 0.1);
+            border-radius: 6px;
+            border: 1px solid rgba(39, 202, 63, 0.3);
+        }
+
+        .verification-badge i {
+            font-size: 16px;
+        }
+
+        .dialog-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .dialog-button {
+            padding: 10px 25px;
+            border-radius: 4px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dialog-button.cancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary-color);
+        }
+
+        .dialog-button.cancel:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .dialog-button.confirm {
+            background: var(--windows-accent);
+            color: white;
+        }
+
+        .dialog-button.confirm:hover {
+            background: #0088e8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .side-text {
+                position: static;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            
+            .name-toggle {
+                height: auto;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .windows-explorer {
+                height: 400px;
+            }
+            
+            .sidebar {
+                width: 160px;
+            }
+            
+            .files-area {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .file-item {
+                padding: 15px 10px;
+            }
+            
+            .file-icon {
+                font-size: 28px;
+            }
+            
+            .ios-nav {
+                gap: 15px;
+                padding: 8px 12px;
+            }
+            
+            .ios-nav-item {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .ios-nav-icon {
+                font-size: 20px;
+            }
+            
+            .dialog-body {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .windows-explorer {
+                height: 350px;
+            }
+            
+            .sidebar {
+                width: 140px;
+            }
+            
+            .files-area {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 10px;
+                padding: 10px;
+            }
+            
+            .file-item {
+                padding: 12px 8px;
+            }
+            
+            .file-icon {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+            
+            .file-name {
+                font-size: 11px;
+                max-width: 70px;
+            }
+            
+            .ios-nav {
+                gap: 10px;
+                padding: 6px 10px;
+            }
+            
+            .ios-nav-item {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .ios-nav-icon {
+                font-size: 18px;
+            }
+            
+            .dialog-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .dialog-button {
+                width: 100%;
+            }
+        }
+        
+        /* Section visibility */
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section id="home" class="section active">
+            <header>
+                <div class="avatar-container" id="avatarContainer">
+                    <img src="img/avatar1.jpg" alt="Avatar 1" class="avatar avatar-1">
+                    <img src="img/avatar2.jpg" alt="Avatar 2" class="avatar avatar-2">
+                </div>
+                
+                <!-- Typewriter animation above the nickname -->
+                <div class="typewriter-container">
+                    <div class="typewriter" id="typewriter"></div>
+                </div>
+                
+                <div class="name-toggle" id="nameToggle">
+                    <div class="side-text left-text tim-text" id="leftText">Тим</div>
+                    <div class="center-text text-animation remote-active" id="centerText">
+                        <span class="text-remote">REMOTE</span>
+                        <span class="text-tim">Тим</span>
+                    </div>
+                    <div class="side-text right-text tim-text" id="rightText">Тим</div>
+                </div>
+                
+                <!-- Text below the nickname -->
+                <div class="additional-text text-below">
+                    <div class="text-content text-tim">Творческий разработчик</div>
+                    <div class="text-content text-remote">Digital кочевник</div>
+                </div>
+            </header>
+            
+            <!-- Links Section -->
+            <div class="links">
+                <h2>Мои ссылки</h2>
+                <div class="links-grid">
+                    <a href="https://t.me/scenaristpornuhi" class="link-item" target="_blank">
+                        <div class="link-icon">
+                            <i class="fab fa-telegram"></i>
+                        </div>
+                        <div class="link-name">Telegram</div>
+                        <div class="link-desc">Мой канал</div>
+                    </a>
+                    
+                    <a href="https://steamcommunity.com/id/timdem5" class="link-item" target="_blank">
+                        <div class="link-icon">
+                            <i class="fab fa-steam"></i>
+                        </div>
+                        <div class="link-name">Steam</div>
+                        <div class="link-desc">Мой профиль</div>
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <section id="projects" class="section">
+            <div class="projects">
+                <h2>Мои проекты</h2>
+                <div class="windows-explorer">
+                    <div class="explorer-header">
+                        <div class="explorer-buttons">
+                            <div class="explorer-button red"></div>
+                            <div class="explorer-button yellow"></div>
+                            <div class="explorer-button green"></div>
+                        </div>
+                        <div class="address-bar">
+                            <div class="address-path" id="addressPath">Projects</div>
+                        </div>
+                    </div>
+                    
+                    <div class="explorer-content">
+                        <div class="sidebar">
+                            <div class="sidebar-section">
+                                <div class="sidebar-title">Проекты</div>
+                                <div class="sidebar-item active" data-folder="projects">
+                                    <div class="sidebar-icon"><i class="far fa-folder-open"></i></div>
+                                    <div class="sidebar-text">Все проекты</div>
+                                </div>
+                                <div class="sidebar-item" data-folder="feesto">
+                                    <div class="sidebar-icon"><i class="far fa-folder"></i></div>
+                                    <div class="sidebar-text">Feesto</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="main-content">
+                            <div class="files-area" id="filesArea">
+                                <!-- Files will be dynamically loaded here -->
+                            </div>
+                            
+                            <div class="status-bar">
+                                <div class="status-left">Проектов: <span id="totalCount">0</span></div>
+                                <div class="status-right">Remote Portfolio</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <div class="links">
+                <h2>Обо мне</h2>
+                <p>Привет, я Тим, а точнее мой новый псевдоним - это Remote. Я средний программист, умею программировать на C#, Python, JavaScript и Java. Создаю проекты, у меня их на данный момент несколько.</p>
+                <p>Я также хорошо знаю Python и использую его для различных проектов, включая веб-разработку, автоматизацию и анализ данных.</p>
+                <p>Я ютубер, у меня есть канал на 50 подписчиков и скоро хочу завести новый под формат настоящих видосов. Буду очень рад вашей поддержке если вы зайдёте в мой телеграм канал и подпишитесь на него.</p>
+                <div class="links-grid">
+                    <a href="https://t.me/scenaristpornuhi" class="link-item" target="_blank">
+                        <div class="link-icon">
+                            <i class="fab fa-telegram"></i>
+                        </div>
+                        <div class="link-name">Telegram</div>
+                        <div class="link-desc">Мой канал</div>
+                    </a>
+                    
+                    <a href="https://steamcommunity.com/id/timdem5" class="link-item" target="_blank">
+                        <div class="link-icon">
+                            <i class="fab fa-steam"></i>
+                        </div>
+                        <div class="link-name">Steam</div>
+                        <div class="link-desc">Мой профиль</div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- iOS Style Navigation -->
+    <nav class="ios-nav" id="iosNav">
+        <a class="ios-nav-item active" data-target="home">
+            <div class="ios-nav-icon">
+                <i class="fas fa-stop"></i>
+            </div>
+        </a>
+        <a class="ios-nav-item" data-target="about">
+            <div class="ios-nav-icon">
+                <i class="far fa-user"></i>
+            </div>
+        </a>
+        <a class="ios-nav-item" data-target="projects">
+            <div class="ios-nav-icon">
+                <i class="far fa-folder"></i>
+            </div>
+        </a>
+    </nav>
+    
+    <!-- Link Dialog Modal -->
+    <div class="modal" id="linkDialog">
+        <div class="link-dialog">
+            <div class="dialog-header">
+                <div class="dialog-title">
+                    <i class="fas fa-external-link-alt dialog-icon"></i>
+                    <span>Переход по ссылке</span>
+                </div>
+                <button class="dialog-close" id="closeLinkDialog">×</button>
+            </div>
+            <div class="dialog-body">
+                <div class="dialog-message">
+                    Вы переходите на внешний ресурс. Ссылка откроется в новом окне.
+                </div>
+                <div class="dialog-url" id="linkUrl">
+                    https://disk.yandex.ru/d/7Z97SV1IGtlcKA
+                </div>
+                <div class="verification-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Ссылка верифицирована автором</span>
+                </div>
+                <div class="dialog-buttons">
+                    <button class="dialog-button cancel" id="cancelLink">Отмена</button>
+                    <button class="dialog-button confirm" id="confirmLink">Перейти</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notepad Modal -->
+    <div class="modal" id="notepadModal">
+        <div class="notepad">
+            <div class="notepad-header">
+                <div class="notepad-title">
+                    <i class="far fa-file-alt"></i>
+                    описание.txt
+                </div>
+                <div class="notepad-controls">
+                    <div class="notepad-button minimize">_</div>
+                    <div class="notepad-button maximize">□</div>
+                    <div class="notepad-button close" id="closeModal">×</div>
+                </div>
+            </div>
+            <div class="notepad-menu">
+                <div class="menu-item">Файл</div>
+                <div class="menu-item">Правка</div>
+                <div class="menu-item">Формат</div>
+                <div class="menu-item">Вид</div>
+                <div class="menu-item">Справка</div>
+            </div>
+            <div class="notepad-content">
+Вы душа которой нужно тело,
+проходя через локации и боссов вы все-таки найдёте своё тело.
+
+[Feesto - философская игра-платформер]
+
+Особенности:
+• Уникальная механика поиска "своего тела"
+• Сложные локации с головоломками
+• Эпические битвы с боссами
+• Глубокая философская составляющая
+• Минималистичный пиксель-арт стиль
+
+Статус: В разработке
+            </div>
+            <div class="notepad-status">
+                <div>Строка 1, Столбец 1</div>
+                <div>100% | Windows (CRLF) | UTF-8</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // File system data - simplified structure with only feesto
+        const fileSystem = {
+            'projects': [
+                { 
+                    name: 'Feesto', 
+                    type: 'folder', 
+                    icon: 'far fa-folder',
+                    description: 'Игра-платформер'
+                },
+                { 
+                    name: 'Проекты', 
+                    type: 'folder', 
+                    icon: 'far fa-folder',
+                    description: 'Все проекты',
+                    link: true,
+                    url: 'https://disk.yandex.ru/d/7Z97SV1IGtlcKA'
+                },
+                { 
+                    name: 'README.md', 
+                    type: 'file', 
+                    icon: 'fab fa-markdown',
+                    description: 'Описание проектов'
+                }
+            ],
+            'feesto': [
+                { 
+                    name: 'Описание проекта.txt', 
+                    type: 'file', 
+                    icon: 'far fa-file-alt', 
+                    description: 'Подробная информация' 
+                },
+                { 
+                    name: 'Исходный код', 
+                    type: 'folder', 
+                    icon: 'far fa-folder',
+                    description: 'C# Unity'
+                },
+                { 
+                    name: 'Ресурсы', 
+                    type: 'folder', 
+                    icon: 'far fa-folder',
+                    description: 'Графика и звук'
+                },
+                { 
+                    name: 'Документация', 
+                    type: 'folder', 
+                    icon: 'far fa-folder',
+                    description: 'Техническая документация'
+                }
+            ]
+        };
+
+        // Windows Explorer functionality
+        const addressPath = document.getElementById('addressPath');
+        const filesArea = document.getElementById('filesArea');
+        const totalCount = document.getElementById('totalCount');
+        const sidebarItems = document.querySelectorAll('.sidebar-item');
+        const notepadModal = document.getElementById('notepadModal');
+        const closeModal = document.getElementById('closeModal');
+        const linkDialog = document.getElementById('linkDialog');
+        const closeLinkDialog = document.getElementById('closeLinkDialog');
+        const cancelLink = document.getElementById('cancelLink');
+        const confirmLink = document.getElementById('confirmLink');
+        const linkUrl = document.getElementById('linkUrl');
+
+        let currentFolder = 'projects';
+
+        // Load files for current folder
+        function loadFolder(folder) {
+            currentFolder = folder;
+            filesArea.innerHTML = '';
+            
+            const files = fileSystem[folder] || [];
+            
+            files.forEach(file => {
+                const fileElement = document.createElement('div');
+                fileElement.className = 'file-item';
+                
+                // Add link badge if it's a link folder
+                const linkBadge = file.link ? '<div class="link-badge"><i class="fas fa-link"></i></div>' : '';
+                
+                fileElement.innerHTML = `
+                    ${linkBadge}
+                    <div class="file-icon"><i class="${file.icon}"></i></div>
+                    <div class="file-name">${file.name}</div>
+                    ${file.description ? `<div style="color: var(--secondary-color); font-size: 11px; margin-top: 5px;">${file.description}</div>` : ''}
+                `;
+                
+                fileElement.addEventListener('click', () => {
+                    // Remove selection from all files
+                    document.querySelectorAll('.file-item').forEach(item => {
+                        item.classList.remove('selected');
+                    });
+                    
+                    // Add selection to clicked file
+                    fileElement.classList.add('selected');
+                });
+                
+                fileElement.addEventListener('dblclick', () => {
+                    if (file.type === 'folder' && file.link) {
+                        // Show link dialog for projects folder
+                        linkDialog.style.display = 'flex';
+                    } else if (file.type === 'folder') {
+                        loadFolder(file.name.toLowerCase().replace(' ', '-'));
+                        updateAddressPath(file.name);
+                    } else if (file.name === 'Описание проекта.txt') {
+                        notepadModal.style.display = 'flex';
+                    }
+                });
+                
+                filesArea.appendChild(fileElement);
+            });
+            
+            totalCount.textContent = files.length;
+            updateAddressPath(getFolderDisplayName(folder));
+        }
+
+        // Update address bar path
+        function updateAddressPath(folderName) {
+            addressPath.textContent = folderName;
+        }
+
+        // Get display name for folder
+        function getFolderDisplayName(folder) {
+            const displayNames = {
+                'projects': 'Все проекты',
+                'feesto': 'Feesto'
+            };
+            return displayNames[folder] || folder;
+        }
+
+        // Initialize sidebar navigation
+        sidebarItems.forEach(item => {
+            item.addEventListener('click', function() {
+                sidebarItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                
+                const folder = this.getAttribute('data-folder');
+                loadFolder(folder);
+            });
+        });
+
+        // Initialize explorer
+        loadFolder('projects');
+
+        // iOS Navigation functionality
+        const iosNav = document.getElementById('iosNav');
+        const iosNavItems = document.querySelectorAll('.ios-nav-item');
+        const sections = document.querySelectorAll('.section');
+        const homeIcon = document.querySelector('.ios-nav-item[data-target="home"] .ios-nav-icon');
+        
+        let expandTimeout;
+        let isExpanded = false;
+        
+        // Expand navigation on hover (desktop) or tap (mobile)
+        const expandNav = () => {
+            if (!isExpanded) {
+                iosNav.classList.add('expanded');
+                isExpanded = true;
+            }
+            
+            // Clear any existing timeout
+            if (expandTimeout) {
+                clearTimeout(expandTimeout);
+            }
+        };
+        
+        // Collapse navigation after delay
+        const collapseNav = () => {
+            if (isExpanded) {
+                expandTimeout = setTimeout(() => {
+                    iosNav.classList.remove('expanded');
+                    isExpanded = false;
+                }, 2000);
+            }
+        };
+        
+        // Handle navigation item clicks
+        iosNavItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('data-target');
+                
+                // Update active nav item
+                iosNavItems.forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update home icon based on current section
+                if (targetId === 'home') {
+                    homeIcon.innerHTML = '<i class="fas fa-stop"></i>';
+                } else {
+                    homeIcon.innerHTML = '<i class="fas fa-arrow-up"></i>';
+                }
+                
+                // Simple fade transition
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                document.getElementById(targetId).classList.add('active');
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Expand nav on mobile tap
+                if (window.innerWidth <= 768) {
+                    expandNav();
+                    collapseNav();
+                }
+            });
+            
+            // Expand on hover for desktop
+            if (window.innerWidth > 768) {
+                item.addEventListener('mouseenter', expandNav);
+            }
+        });
+        
+        // Handle nav container hover
+        if (window.innerWidth > 768) {
+            iosNav.addEventListener('mouseenter', expandNav);
+            iosNav.addEventListener('mouseleave', collapseNav);
+        }
+        
+        // Handle touch events for mobile
+        iosNav.addEventListener('touchstart', expandNav);
+        document.addEventListener('touchstart', (e) => {
+            if (!iosNav.contains(e.target)) {
+                collapseNav();
+            }
+        });
+
+        // Typewriter animation
+        function typeWriter(element, text, speed, callback) {
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else if (callback) {
+                    setTimeout(callback, 1000);
+                }
+            }
+            type();
+        }
+
+        function deleteText(element, speed, callback) {
+            let text = element.innerHTML;
+            let i = text.length;
+            
+            function deleteChar() {
+                if (i > 0) {
+                    element.innerHTML = text.substring(0, i - 1);
+                    i--;
+                    setTimeout(deleteChar, speed);
+                } else if (callback) {
+                    setTimeout(callback, 500);
+                }
+            }
+            deleteChar();
+        }
+
+        function startTypewriterAnimation() {
+            const typewriter = document.getElementById('typewriter');
+            
+            // First phase: print "print "hello world!""
+            typeWriter(typewriter, 'print "hello world!"', 100, function() {
+                // Wait and then delete
+                setTimeout(() => {
+                    deleteText(typewriter, 50, function() {
+                        // Print "» hello world"
+                        typeWriter(typewriter, '» hello world', 80, function() {
+                            // Wait and restart animation
+                            setTimeout(() => {
+                                deleteText(typewriter, 30, startTypewriterAnimation);
+                            }, 2000);
+                        });
+                    });
+                }, 1000);
+            });
+        }
+
+        // Start typewriter animation when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            startTypewriterAnimation();
+        });
+
+        // Avatar swap functionality
+        const avatarContainer = document.getElementById('avatarContainer');
+        
+        avatarContainer.addEventListener('click', function() {
+            this.classList.toggle('avatar-swapped');
+        });
+        
+        // Name toggle functionality with animations
+        const centerText = document.getElementById('centerText');
+        const nameToggle = document.getElementById('nameToggle');
+        const leftText = document.getElementById('leftText');
+        const rightText = document.getElementById('rightText');
+        
+        centerText.addEventListener('click', function() {
+            if (this.classList.contains('remote-active')) {
+                // Switch to Тим
+                this.classList.remove('remote-active');
+                this.classList.add('tim-active');
+                nameToggle.classList.add('text-swapped');
+                
+                // Update side texts
+                leftText.textContent = 'REMOTE';
+                rightText.textContent = 'REMOTE';
+                leftText.classList.remove('tim-text');
+                leftText.classList.add('remote-text');
+                rightText.classList.remove('tim-text');
+                rightText.classList.add('remote-text');
+            } else {
+                // Switch to REMOTE
+                this.classList.remove('tim-active');
+                this.classList.add('remote-active');
+                nameToggle.classList.remove('text-swapped');
+                
+                // Update side texts
+                leftText.textContent = 'Тим';
+                rightText.textContent = 'Тим';
+                leftText.classList.remove('remote-text');
+                leftText.classList.add('tim-text');
+                rightText.classList.remove('remote-text');
+                rightText.classList.add('tim-text');
+            }
+        });
+
+        // Close modals
+        closeModal.addEventListener('click', function() {
+            notepadModal.style.display = 'none';
+        });
+
+        notepadModal.addEventListener('click', function(e) {
+            if (e.target === notepadModal) {
+                notepadModal.style.display = 'none';
+            }
+        });
+
+        // Link dialog functionality
+        closeLinkDialog.addEventListener('click', function() {
+            linkDialog.style.display = 'none';
+        });
+
+        cancelLink.addEventListener('click', function() {
+            linkDialog.style.display = 'none';
+        });
+
+        confirmLink.addEventListener('click', function() {
+            window.open('https://disk.yandex.ru/d/7Z97SV1IGtlcKA', '_blank');
+            linkDialog.style.display = 'none';
+        });
+
+        linkDialog.addEventListener('click', function(e) {
+            if (e.target === linkDialog) {
+                linkDialog.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
